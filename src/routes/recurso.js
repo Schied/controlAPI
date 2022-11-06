@@ -4,7 +4,9 @@ const recursoCtrl = require('../controllers/recursoCtrl');
 
 
 router.post('/', recursoCtrl.subir);
-router.get('/:name', recursoCtrl.ver)
+router.get('/', recursoCtrl.getAll)
+router.get('/:Id_equipo', recursoCtrl.getByEquipo)
+router.get('/url/:name', recursoCtrl.verURL)
 
 module.exports = router;
 
