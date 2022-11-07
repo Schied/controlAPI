@@ -47,7 +47,6 @@ exports.signin = async (req, res) => {
     if (!req.body.users) return res.status(404).send({ success: false, body: {message: 'Usuario no existe'} });
     let user = req.body.users[0];
     const match = await bcrypt.compare(req.body.Contra_usu, user.contra_usu);
-    delete user.Contra_usu;
     if (match) {
         res.status(200).send({ success: true, body: {message: 'Credenciales validas'} })
     } else {
