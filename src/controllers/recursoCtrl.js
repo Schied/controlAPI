@@ -20,8 +20,8 @@ exports.subir = async (req, res) => {
   let { Nombre_recurso, Id_equipo } = req.body;
   try {
     const response = await pool.query(
-      `INSERT INTO recurso(Nombre_recurso, Valor_recurso, Id_equipo) VALUES ($1, $2, $3)`,
-      [Nombre_recurso, URL_BASE + req.file.filename, Id_equipo]
+      `INSERT INTO recurso(Nombre_recurso, Valor_recurso, NombreF_recurso, Id_equipo) VALUES ($1, $2, $3, $4)`,
+      [Nombre_recurso, URL_BASE + req.file.filename, req.file.filename, Id_equipo]
     );
     console.log(response);
     res.status(201).send({

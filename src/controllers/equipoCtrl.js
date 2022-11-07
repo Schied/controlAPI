@@ -15,7 +15,7 @@ const pool = new Pool({
 
 exports.getAll = async (req, res) => {
   try {
-    const response = await pool.query(`SELECT * FROM equipo`);
+    const response = await pool.query(`SELECT * FROM equipo WHERE Estado_equipo = true`);
     res.status(201).send({ success: true, body: response.rows });
   } catch (error) {
     res.status(500).send({
@@ -29,9 +29,9 @@ exports.getAll = async (req, res) => {
 };
 
 exports.createEquipo = async (req, res) => {
-    const { Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo } = req.body;
+    const { Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Num_placa_equipo } = req.body;
     try {
-      const response = await pool.query(`INSERT INTO equipo(Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo]);
+      const response = await pool.query(`INSERT INTO equipo(Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Num_placa_equipo) VALUES ($1, $2, $3, $4, $5, $6)`, [Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Num_placa_equipo]);
       res.status(201).send({
         success: true,
         body: {
