@@ -13,6 +13,21 @@ const pool = new Pool({
     ssl: true
 });
 
+exports.getAll = async (req, res) => {
+  try {
+    const response = await pool.query(`SELECT * FROM equipo`);
+    res.status(201).send({ success: true, body: response.rows });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      body: {
+        message: "No se ha podido cargar los recursos",
+        error,
+      },
+    });
+  }
+};
+
 exports.createEquipo = async (req, res) => {
     const { Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo } = req.body;
     try {
@@ -34,3 +49,4 @@ exports.createEquipo = async (req, res) => {
     }
     
 }
+
