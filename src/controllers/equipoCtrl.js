@@ -1,15 +1,36 @@
-const mysql = require('mysql');
+const { Pool } = require('pg');
+const keys = require('../util/keys');
+const url = require('url');
+const params = url.parse(keys.DB);
+const auth = params.auth.split(':');
 
-const pool  = mysql.createPool({
-  host            : 'localhost',
-  user            : 'root',
-  database        : 'controljf_db'
+const pool = new Pool({
+    user: auth[0],
+    password: auth[1],
+    host: params.hostname,
+    port: params.port,
+    database: params.pathname.split('/')[1],
+    ssl: true
 });
 
 exports.createEquipo = async (req, res) => {
     const { Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo } = req.body;
-    pool.query(`INSERT INTO equipo(Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo) VALUES (?, ?, ?, ?, ?, ?, ?)`, [Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo], (err, results) => {
-        if (err) return res.status(500).send({success: false, body: err});
-        res.status(201).send({success: true, body: results});
-    });
+    try {
+      const response = pool.query(`INSERT INTO equipo(Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo]);
+      res.status(201).send({
+        success: true,
+        body: {
+          message: "Equipo creado"
+        }
+      })
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        body: {
+          message: "No se ha podido crear el equipo",
+          error
+        }
+      })
+    }
+    
 }

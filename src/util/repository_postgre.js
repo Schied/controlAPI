@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 const keys = require('./keys');
 const url = require('url');
-const params = url.parse(keys.DB);
+const params = url.parse(keys.DB2);
 const auth = params.auth.split(':');
 
 const pool = new Pool({

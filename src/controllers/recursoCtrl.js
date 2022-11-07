@@ -1,27 +1,57 @@
 const fs = require('fs');
-const mysql = require('mysql');
+const { Pool } = require('pg');
+const keys = require('../util/keys');
+const url = require('url');
+const params = url.parse(keys.DB);
+const auth = params.auth.split(':');
 
-const pool  = mysql.createPool({
-  host            : 'localhost',
-  user            : 'root',
-  database        : 'controljf_db'
+const pool = new Pool({
+    user: auth[0],
+    password: auth[1],
+    host: params.hostname,
+    port: params.port,
+    database: params.pathname.split('/')[1],
+    ssl: true
 });
 
-const URL_BASE = "http://localhost:3000/";
+const URL_BASE = "https://app-controljf.herokuapp.com/";
 
 exports.subir = async (req, res) => {
   let { Nombre_recurso, Id_equipo } = req.body;
-    pool.query(`INSERT INTO recurso(Nombre_recurso, Valor_recurso, Id_equipo) VALUES (?, ?, ?)`, [Nombre_recurso, URL_BASE + req.file.filename, Id_equipo], (err, results) => {
-        if (err) return res.status(500).send({success: false, body: err});
-        res.status(201).send({success: true, body: results});
-    });
+  try {
+    const response = pool.query(`INSERT INTO recurso(Nombre_recurso, Valor_recurso, Id_equipo) VALUES ($1, $2, $3)`, [Nombre_recurso, URL_BASE + req.file.filename, Id_equipo]);
+    res.status(201).send({
+      success: true,
+      body: {
+        message: "Recurso creado"
+      }
+    })
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      body: {
+        message: "No se ha podido crear el equipo",
+        error
+      }
+    })
+  }
+    
 };
 
 exports.getAll = (req, res) => {
-  pool.query(`SELECT * FROM recurso`, (err, results) => {
-    if (err) return res.status(500).send({success: false, body: err});
-    res.status(201).send({success: true, body: results});
-});  
+  try {
+    const response = pool.query(`SELECT * FROM recurso`);  
+    res.status(201).send({success: true, body: response.rows });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      body: {
+        message: "No se ha podido cargar los recursos",
+        error
+      }
+    })
+  }
+  
 };
 
 
