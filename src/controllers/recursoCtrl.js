@@ -21,7 +21,12 @@ exports.subir = async (req, res) => {
   try {
     const response = await pool.query(
       `INSERT INTO recurso(Nombre_recurso, Valor_recurso, NombreF_recurso, Id_equipo) VALUES ($1, $2, $3, $4)`,
-      [Nombre_recurso, URL_BASE + req.file.filename, req.file.filename, Id_equipo]
+      [
+        Nombre_recurso,
+        URL_BASE + req.file.filename,
+        req.file.filename,
+        Id_equipo,
+      ]
     );
     console.log(response);
     res.status(201).send({
@@ -58,14 +63,26 @@ exports.getAll = async (req, res) => {
 
 exports.getByEquipo = (req, res) => {
   let { Id_equipo } = req.params;
-  pool.query(
-    `SELECT * FROM recurso WHERE Id_equipo = ?`,
-    [Id_equipo],
-    (err, results) => {
-      if (err) return res.status(500).send({ success: false, body: err });
-      res.status(201).send({ success: true, body: results });
+  try {
+    const response = pool.query(
+      `SELECT * FROM recurso WHERE Id_equipo = ${Id_equipo}`
+    );
+    if (response.rowCount > 0) {
+      res.status(201).send({ success: true, body: response.rows });
+    } else {
+      res
+        .status(404)
+        .send({ success: true, body: { message: "No hay recursos" } });
     }
-  );
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      body: {
+        message: "No se ha podido cargar los recursos",
+        error,
+      },
+    });
+  }
 };
 
 exports.verURL = (req, res) => {
@@ -88,7 +105,7 @@ exports.deleteRecurso = async (req, res) => {
   );
   console.log(response);
   if (response.rowCount > 0) {
-    fs.unlink("./uploads/" + name[0].valor_recurso, (err) => {
+    fs.unlink("./uploads/" + ruta[0].NombreF_recurso, (err) => {
       if (err) {
         throw err;
       }
