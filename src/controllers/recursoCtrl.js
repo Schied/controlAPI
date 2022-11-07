@@ -19,7 +19,8 @@ const URL_BASE = "https://app-controljf.herokuapp.com/";
 exports.subir = async (req, res) => {
   let { Nombre_recurso, Id_equipo } = req.body;
   try {
-    const response = pool.query(`INSERT INTO recurso(Nombre_recurso, Valor_recurso, Id_equipo) VALUES ($1, $2, $3)`, [Nombre_recurso, URL_BASE + req.file.filename, Id_equipo]);
+    const response = await pool.query(`INSERT INTO recurso(Nombre_recurso, Valor_recurso, Id_equipo) VALUES ($1, $2, $3)`, [Nombre_recurso, URL_BASE + req.file.filename, Id_equipo]);
+    console.log(response);
     res.status(201).send({
       success: true,
       body: {
@@ -38,9 +39,9 @@ exports.subir = async (req, res) => {
     
 };
 
-exports.getAll = (req, res) => {
+exports.getAll = async (req, res) => {
   try {
-    const response = pool.query(`SELECT * FROM recurso`);  
+    const response = await pool.query(`SELECT * FROM recurso`);  
     res.status(201).send({success: true, body: response.rows });
   } catch (error) {
     res.status(500).send({

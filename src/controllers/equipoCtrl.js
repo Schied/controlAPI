@@ -16,7 +16,7 @@ const pool = new Pool({
 exports.createEquipo = async (req, res) => {
     const { Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo } = req.body;
     try {
-      const response = pool.query(`INSERT INTO equipo(Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo]);
+      const response = await pool.query(`INSERT INTO equipo(Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Clasificacion_equipo, Num_placa_equipo]);
       res.status(201).send({
         success: true,
         body: {
