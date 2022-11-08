@@ -104,13 +104,19 @@ exports.deleteRecurso = async (req, res) => {
     `DELETE FROM recurso WHERE Id_recurso = ${Id_recurso}`
   );
   console.log(response);
+  console.log(ruta.rows[0]);
   if (response.rowCount > 0) {
-    fs.unlink("./uploads/" + ruta[0].NombreF_recurso, (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log("Delete File successfully.");
-    });
+    try {
+      fs.unlink("./uploads/" + ruta.rows[0].NombreF_recurso, (err) => {
+        if (err) {
+          throw err;
+        }
+        console.log("Delete File successfully.");
+      });
+    } catch (error) {
+      console.log("Delete File failed." + error);
+    }
+    
     res.status(200).send({
       success: true,
       body: {
