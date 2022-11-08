@@ -105,7 +105,7 @@ exports.deleteRecurso = async (req, res) => {
   );
   if (response.rowCount > 0) {
     try {
-      fs.unlink("./uploads/" + ruta.rows[0].NombreF_recurso, (err) => {
+      fs.unlink("./uploads/" + ruta.rows[0].nombref_recurso, (err) => {
         if (err) {
           throw err;
         }
