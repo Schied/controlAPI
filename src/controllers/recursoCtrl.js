@@ -61,10 +61,10 @@ exports.getAll = async (req, res) => {
   }
 };
 
-exports.getByEquipo = (req, res) => {
+exports.getByEquipo = async (req, res) => {
   let { Id_equipo } = req.params;
   try {
-    const response = pool.query(
+    const response = await pool.query(
       `SELECT * FROM recurso WHERE Id_equipo = ${Id_equipo}`
     );
     if (response.rowCount > 0) {
