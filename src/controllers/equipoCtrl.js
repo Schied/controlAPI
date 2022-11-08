@@ -47,6 +47,9 @@ exports.createEquipo = async (req, res) => {
         }
       })
     }
-    
+}
+
+exports.desactivarEquipo = async (req, res) => {
+  
 }
 
