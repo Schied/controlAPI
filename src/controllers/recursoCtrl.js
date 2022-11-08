@@ -72,7 +72,7 @@ exports.getByEquipo = async (req, res) => {
     } else {
       res
         .status(404)
-        .send({ success: true, body: { message: "No hay recursos" } });
+        .send({ success: true, body: [] });
     }
   } catch (error) {
     res.status(500).send({
