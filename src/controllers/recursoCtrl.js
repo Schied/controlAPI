@@ -103,8 +103,6 @@ exports.deleteRecurso = async (req, res) => {
   const response = await pool.query(
     `DELETE FROM recurso WHERE Id_recurso = ${Id_recurso}`
   );
-  console.log(response);
-  console.log(ruta.rows[0]);
   if (response.rowCount > 0) {
     try {
       fs.unlink("./uploads/" + ruta.rows[0].NombreF_recurso, (err) => {
