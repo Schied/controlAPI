@@ -15,15 +15,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cors());
 app.use(express.static("./uploads"));
 
-app.use(multer({
-    storage: multer.diskStorage({
-        destination: './uploads/',
-        limits: { fileSize: 10 * 1024 * 1024 }, // Maximo 10Mb
-        filename: function ( req, file, cb ) {
-            cb( null, `${Date.now()}-${file.originalname}`);
-        }
-    })
-}).single('file'));
+
 
 app.use('/recurso', recursoRoutes);
 app.use('/user', usuarioRoutes);
