@@ -5,11 +5,7 @@ const url = require("url");
 const params = url.parse(keys.DB);
 const auth = params.auth.split(":");
 const os = require('os');
-const dropboxV2Api = require('dropbox-v2-api');
-
-const dropbox = dropboxV2Api.authenticate({
-  token: 'sl.BSyviSWMlPYqEH7YAK3RKjizNNzBHlVc6O1LDQpXAQuecW6QomO-uUHUquGOBaobTw5sCvdVdPHpBfOuvLk1HqqwKYjB8OSmNRZvwVV0SoDlozJZWta84mOVG5RYURuHVKYKOk6OFFGW'
-});
+const { Storage, File } = require('megajs');
 
 
 const pool = new Pool({
@@ -23,13 +19,17 @@ const pool = new Pool({
 
 const URL_BASE = "https://app-controljf.herokuapp.com/";
 
-exports.funcionaporfavor = (req, res) => { 
-    const downloadStream = dropbox({
-        resource: 'files/download',
-        parameters: { path: '/1ece86ec1e152e934626d9a1b0cd7e34' }
-    });
-    res.setHeader('Content-type', 'application/pdf');   
-    downloadStream.pipe(res);
+exports.funcionaporfavor = async (req, res) => { 
+  const storage = await new Storage({
+    email: 'david.205682@gmail.com',
+    password: 'Copito02051!'
+  }).ready
+const file = Object.values(storage.files).find(file => file.name === 'Laboratorio4.pdf');
+//const file = File.fromURL('https://mega.nz/file/vb8RX4y3NBNzQmlRJUzdZG5oaHJvUDlRNURBPhEhHlrVZM1BHcR8M7FuCg')
+res.setHeader('Content-type', 'application/pdf');
+const stream = file.download()
+stream.on('error', error => console.error(error))
+stream.pipe(res)
 }
 
 exports.subir = async (req, res) => {
