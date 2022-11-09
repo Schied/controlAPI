@@ -4,9 +4,8 @@ const keys = require("../util/keys");
 const url = require("url");
 const params = url.parse(keys.DB);
 const auth = params.auth.split(":");
-const os = require('os');
-const { Storage, File } = require('megajs');
-
+const os = require("os");
+const { Storage, File } = require("megajs");
 
 const pool = new Pool({
   user: auth[0],
@@ -17,23 +16,22 @@ const pool = new Pool({
   ssl: true,
 });
 
-const URL_BASE = "https://app-controljf.herokuapp.com/";
-
-exports.funcionaporfavor = async (req, res) => { 
-  const storage = await new Storage({
-    email: 'david.205682@gmail.com',
-    password: 'Copito02051!'
-  }).ready
-const file = Object.values(storage.files).find(file => file.name === 'Laboratorio4.pdf');
-//const file = File.fromURL('https://mega.nz/file/vb8RX4y3NBNzQmlRJUzdZG5oaHJvUDlRNURBPhEhHlrVZM1BHcR8M7FuCg')
-res.setHeader('Content-type', 'application/pdf');
-const stream = file.download()
-stream.on('error', error => console.error(error))
-stream.pipe(res)
-}
+const URL_BASE = "https://app-controljf.herokuapp.com/recurso/ver/";
+const user = {
+  email: "freiban1999@outlook.com",
+  password: "1193037498fsaq",
+};
 
 exports.subir = async (req, res) => {
   let { Nombre_recurso, Id_equipo } = req.body;
+  const storage = await new Storage(user).ready;
+  const file = await storage.upload(
+    {
+      name: req.file.filename,
+      size: req.file.size,
+    },
+    fs.createReadStream(req.file.path)
+  ).complete;
   try {
     const response = await pool.query(
       `INSERT INTO recurso(Nombre_recurso, Valor_recurso, NombreF_recurso, Id_equipo) VALUES ($1, $2, $3, $4)`,
@@ -77,6 +75,17 @@ exports.getAll = async (req, res) => {
   }
 };
 
+exports.verPDF = async (req, res) => {
+  const storage = await new Storage(user).ready;
+  const file = Object.values(storage.files).find(
+    (file) => file.name === req.params.name
+  );
+  res.setHeader("Content-type", "application/pdf");
+  const stream = file.download();
+  stream.on("error", (error) => console.error(error));
+  stream.pipe(res);
+};
+
 exports.getByEquipo = async (req, res) => {
   let { Id_equipo } = req.params;
   try {
@@ -86,9 +95,7 @@ exports.getByEquipo = async (req, res) => {
     if (response.rowCount > 0) {
       res.status(201).send({ success: true, body: response.rows });
     } else {
-      res
-        .status(404)
-        .send({ success: true, body: [] });
+      res.status(404).send({ success: true, body: [] });
     }
   } catch (error) {
     res.status(500).send({
@@ -110,7 +117,6 @@ exports.verURL = (req, res) => {
   res.send(file);
 };
 
-
 exports.actualizarRecurso = async (req, res) => {
   let { Id_recurso } = req.body;
   let urlFinal = URL_BASE + req.file.filename;
@@ -131,7 +137,7 @@ exports.actualizarRecurso = async (req, res) => {
     } catch (error) {
       console.log("Update File failed." + error);
     }
-    
+
     res.status(200).send({
       success: true,
       body: {
