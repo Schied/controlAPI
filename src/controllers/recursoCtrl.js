@@ -8,7 +8,7 @@ const os = require('os');
 const dropboxV2Api = require('dropbox-v2-api');
 
 const dropbox = dropboxV2Api.authenticate({
-  token: 'sl.BSwI5w5Uw-TSqJtI1Iolc0hgN89YRMEbkQbYwtbLBgFggVHmWvMctKgf8regJ9dEgik9kkzERhkCQWwcTVz86LZwhBp7E-B9tE5JD0ezncwJGBKTfZNWLLvILMFC-1FnhTd8WsdbjI72'
+  token: 'sl.BSylynwXWNzX8S49T9k50xQKx7DGBNhjlGsBTRbZ_eqG0i2aU5_WvlGYfe47EnzG_FGbA4-Gy4E3Eho_aDNL7PySkSNQN1lkscJVTbu3Yh1K-Ur3s728sUmcPByLODN6rcKxbLN3n7mu'
 });
 
 const pool = new Pool({
