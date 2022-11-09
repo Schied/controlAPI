@@ -5,7 +5,6 @@ const url = require("url");
 const params = url.parse(keys.DB);
 const auth = params.auth.split(":");
 const os = require('os');
-const fs = require('fs');
 const dropboxV2Api = require('dropbox-v2-api');
 
 const dropbox = dropboxV2Api.authenticate({
