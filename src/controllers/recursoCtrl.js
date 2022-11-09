@@ -4,7 +4,6 @@ const keys = require("../util/keys");
 const url = require("url");
 const params = url.parse(keys.DB);
 const auth = params.auth.split(":");
-const os = require("os");
 const { Storage, File } = require("megajs");
 
 const pool = new Pool({
@@ -18,14 +17,13 @@ const pool = new Pool({
 
 const URL_BASE = "https://app-controljf.herokuapp.com/recurso/ver/";
 
-const user = {
-  email: "freiban1999@outlook.com",
-  password: "1193037498fsaq",
-};
 
 exports.subir = async (req, res) => {
   let { Nombre_recurso, Id_equipo } = req.body;
-  const storage = await new Storage(user).ready;
+  const storage = await new Storage({
+    email: "freiban1999@outlook.com",
+    password: "1193037498fsaq",
+  }).ready;
   const file = await storage.upload(
     {
       name: req.file.filename,
@@ -77,7 +75,10 @@ exports.getAll = async (req, res) => {
 };
 
 exports.verPDF = async (req, res) => {
-  const storage = await new Storage(user).ready;
+  const storage = await new Storage({
+    email: "freiban1999@outlook.com",
+    password: "1193037498fsaq",
+  }).ready;
   const file = Object.values(storage.files).find(
     (file) => file.name === req.params.name
   );
