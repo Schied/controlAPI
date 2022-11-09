@@ -94,13 +94,15 @@ exports.verURL = (req, res) => {
   res.send(file);
 };
 
-exports.deleteRecurso = async (req, res) => {
+
+exports.actualizarRecurso = async (req, res) => {
   let { Id_recurso } = req.body;
+  let urlFinal = URL_BASE + req.file.filename;
   let ruta = await pool.query(
     `SELECT * FROM recurso WHERE Id_recurso = ${Id_recurso}`
   );
   const response = await pool.query(
-    `DELETE FROM recurso WHERE Id_recurso = ${Id_recurso}`
+    `UPDATE recurso SET valor_recurso = '${urlFinal}', nombref_recurso = '${req.file.filename}' WHERE Id_recurso = ${ruta.rows[0].id_recurso}`
   );
   if (response.rowCount > 0) {
     try {
@@ -108,23 +110,23 @@ exports.deleteRecurso = async (req, res) => {
         if (err) {
           throw err;
         }
-        console.log("Delete File successfully.");
+        console.log("Update File successfully.");
       });
     } catch (error) {
-      console.log("Delete File failed." + error);
+      console.log("Update File failed." + error);
     }
     
     res.status(200).send({
       success: true,
       body: {
-        message: "Recurso eliminado exitosamente",
+        message: "Recurso actualizado exitosamente",
       },
     });
   } else {
     res.status(404).send({
       success: true,
       body: {
-        message: "No se ha eliminado ningun recurso",
+        message: "No se ha actualizado ningun recurso",
       },
     });
   }

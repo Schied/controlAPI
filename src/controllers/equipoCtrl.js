@@ -13,7 +13,7 @@ const pool = new Pool({
     ssl: true
 });
 
-exports.getAll = async (req, res) => {
+exports.getActivos = async (req, res) => {
   try {
     const response = await pool.query(`SELECT * FROM equipo WHERE Estado_equipo = true`);
     res.status(201).send({ success: true, body: response.rows });
@@ -27,6 +27,22 @@ exports.getAll = async (req, res) => {
     });
   }
 };
+
+exports.getInactivos = async (req, res) => {
+  try {
+    const response = await pool.query(`SELECT * FROM equipo WHERE Estado_equipo = false`);
+    res.status(201).send({ success: true, body: response.rows });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      body: {
+        message: "No se ha podido cargar los recursos",
+        error,
+      },
+    });
+  }
+};
+
 
 exports.createEquipo = async (req, res) => {
     const { Nombre_equipo, Area_equipo, Marca_equipo, Modelo_equipo, Serial_equipo, Num_placa_equipo } = req.body;
@@ -50,6 +66,24 @@ exports.createEquipo = async (req, res) => {
 }
 
 exports.desactivarEquipo = async (req, res) => {
-  
+  const { Id_equipo } = req.body;
+  try {
+    const response = await pool.query(`UPDATE equipo SET estado_equipo = false WHERE id_equipo = ${Id_equipo}`);
+    if (response.rowCount > 0) {
+      res.status(201).send({ success: true, body: {message: 'Equipo desactivado'} });
+    } else {
+      res
+        .status(404)
+        .send({ success: false, body: {message: 'No se ha desactivado el equipo'} });
+    }    
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      body: {
+        message: "No se ha podido desactivar el equipo",
+        error
+      }
+    })
+  }
 }
 
