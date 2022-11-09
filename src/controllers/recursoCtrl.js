@@ -4,6 +4,13 @@ const keys = require("../util/keys");
 const url = require("url");
 const params = url.parse(keys.DB);
 const auth = params.auth.split(":");
+const os = require('os');
+const fs = require('fs');
+const dropboxV2Api = require('dropbox-v2-api');
+
+const dropbox = dropboxV2Api.authenticate({
+  token: 'sl.BSwI5w5Uw-TSqJtI1Iolc0hgN89YRMEbkQbYwtbLBgFggVHmWvMctKgf8regJ9dEgik9kkzERhkCQWwcTVz86LZwhBp7E-B9tE5JD0ezncwJGBKTfZNWLLvILMFC-1FnhTd8WsdbjI72'
+});
 
 const pool = new Pool({
   user: auth[0],
@@ -15,6 +22,15 @@ const pool = new Pool({
 });
 
 const URL_BASE = "https://app-controljf.herokuapp.com/";
+
+exports.funcionaporfavor = (req, res) => { 
+    const downloadStream = dropbox({
+        resource: 'files/download',
+        parameters: { path: '/1ece86ec1e152e934626d9a1b0cd7e34' }
+    });
+    res.setHeader('Content-type', 'application/pdf');   
+    downloadStream.pipe(res);
+}
 
 exports.subir = async (req, res) => {
   let { Nombre_recurso, Id_equipo } = req.body;
