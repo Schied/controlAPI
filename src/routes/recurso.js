@@ -1,6 +1,7 @@
 const {Router} = require('express');
 const router = Router();
 const recursoCtrl = require('../controllers/recursoCtrl');
+const os = require('os');
 const multer  = require('multer');
 const upload = multer({ dest: os.tmpdir() });
 
