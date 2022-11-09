@@ -88,7 +88,7 @@ exports.getByEquipo = async (req, res) => {
 exports.verURL = (req, res) => {
   let { name } = req.params;
   /*res.setHeader('Content-Type', 'application/pdf');
-  res.status(200).send({ success: true, url: `http://localhost:3000/${name}` });*/
+  res.status(200).send({ success: true, url: `http://localhost:3000/${name}` })*/
   var file = fs.readFileSync("./uploads/" + name);
   res.setHeader("Content-Type", "application/pdf");
   res.send(file);
