@@ -9,7 +9,8 @@ router.post('/', upload.single('file'), recursoCtrl.subir);
 router.get('/', recursoCtrl.getAll);
 router.get('/ver/:name', recursoCtrl.verPDF);
 router.get('/:Id_equipo', recursoCtrl.getByEquipo);
-router.put('/', recursoCtrl.actualizarRecurso);
+router.put('/', upload.single('file'), recursoCtrl.actualizarRecurso);
+
 
 module.exports = router;
 

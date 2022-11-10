@@ -26,7 +26,7 @@ exports.subir = async (req, res) => {
   }).ready;
   const file = await storage.upload(
     {
-      name: req.file.filename,
+      name: req.file.filename+".pdf",
       size: req.file.size,
     },
     fs.createReadStream(req.file.path)
@@ -122,6 +122,17 @@ exports.verURL = (req, res) => {
 exports.actualizarRecurso = async (req, res) => {
   let { Id_recurso } = req.body;
   let urlFinal = URL_BASE + req.file.filename;
+  const storage = await new Storage({
+    email: "freiban1999@outlook.com",
+    password: "1193037498fsaq",
+  }).ready;
+  const file = await storage.upload(
+    {
+      name: req.file.filename+".pdf",
+      size: req.file.size,
+    },
+    fs.createReadStream(req.file.path)
+  ).complete;
   let ruta = await pool.query(
     `SELECT * FROM recurso WHERE Id_recurso = ${Id_recurso}`
   );
@@ -130,12 +141,10 @@ exports.actualizarRecurso = async (req, res) => {
   );
   if (response.rowCount > 0) {
     try {
-      fs.unlink("./uploads/" + ruta.rows[0].nombref_recurso, (err) => {
-        if (err) {
-          throw err;
-        }
-        console.log("Update File successfully.");
-      });
+      const file = Object.values(storage.files).find(
+        (file) => file.name === ruta.rows[0].nombref_recurso
+      );
+      const deleted = await file.delete()
     } catch (error) {
       console.log("Update File failed." + error);
     }
@@ -143,7 +152,7 @@ exports.actualizarRecurso = async (req, res) => {
     res.status(200).send({
       success: true,
       body: {
-        message: "Recurso actualizado exitosamente",
+        message: "Recurso actualizado exitosamente"
       },
     });
   } else {
