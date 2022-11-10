@@ -121,7 +121,7 @@ exports.verURL = (req, res) => {
 
 exports.actualizarRecurso = async (req, res) => {
   let { Id_recurso } = req.body;
-  let urlFinal = URL_BASE + req.file.filename;
+  let urlFinal = URL_BASE + req.file.filename+".pdf";
   const storage = await new Storage({
     email: "freiban1999@outlook.com",
     password: "1193037498fsaq",
