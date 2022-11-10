@@ -36,8 +36,8 @@ exports.subir = async (req, res) => {
       `INSERT INTO recurso(Nombre_recurso, Valor_recurso, NombreF_recurso, Id_equipo) VALUES ($1, $2, $3, $4)`,
       [
         Nombre_recurso,
-        URL_BASE + req.file.filename,
-        req.file.filename,
+        URL_BASE + req.file.filename+".pdf",
+        req.file.filename+".pdf",
         Id_equipo,
       ]
     );
