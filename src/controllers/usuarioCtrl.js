@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
 const keys = require('../util/keys');
 const url = require('url');
@@ -48,7 +48,9 @@ exports.signin = async (req, res) => {
     let user = req.body.users[0];
     const match = await bcrypt.compare(req.body.Contra_usu, user.contra_usu);
     if (match) {
-        res.status(200).send({ success: true, body: {message: 'Credenciales validas'} })
+        jwt.sign({ user }, 'privateKey', function (err, token) {
+            res.status(200).send({ success: true, body: {token} })
+        });
     } else {
         res.status(403).send({ success: false, body: {message: 'Credenciales invalidas'} })
     }
