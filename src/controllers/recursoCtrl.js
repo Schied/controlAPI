@@ -137,7 +137,7 @@ exports.actualizarRecurso = async (req, res) => {
     `SELECT * FROM recurso WHERE Id_recurso = ${Id_recurso}`
   );
   const response = await pool.query(
-    `UPDATE recurso SET valor_recurso = '${urlFinal}', nombref_recurso = '${req.file.filename}' WHERE Id_recurso = ${ruta.rows[0].id_recurso}`
+    `UPDATE recurso SET valor_recurso = '${urlFinal}', nombref_recurso = '${req.file.filename+".pdf"}' WHERE Id_recurso = ${ruta.rows[0].id_recurso}`
   );
   if (response.rowCount > 0) {
     try {
